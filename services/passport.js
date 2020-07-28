@@ -81,7 +81,7 @@ passport.use(
               })
             }
           } else {
-            new User({ facebookId: profile.id, email: profile.email })
+            new User({ facebookId: profile.id, email: profile.emails[0].value })
               .save()
               .then(user => {
                 done(null, user);
