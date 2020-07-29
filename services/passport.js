@@ -24,31 +24,32 @@ passport.use(
       callbackURL: keys.googleRedirectURI,
       proxy: true
     },
-    (accessToken, refreshToken, profile, done) => {
+    async (accessToken, refreshToken, profile, done) => {
       // console.log('accessToken', accessToken);
       // console.log('refreshToken', refreshToken);
       // console.log('profile', profile);
 
-      User.findOne({ email: profile.emails[0].value }).then(existingUser => {
-        if (existingUser) {
-          if (existingUser.googleId) {
-            done(null, existingUser);
-          } else {
-            const query = {
-              email: profile.emails[0].value
-            };
-            User.findOneAndUpdate(query, {googleId: profile.id}, (err, user) => {
-              done(null, user);
-            })
-          }
-        } else {
-          new User({ googleId: profile.id, email: profile.emails[0].value })
-            .save()
-            .then(user => {
-              done(null, user);
-            });
-        }
+      const existingUser = await User.findOne({
+        email: profile.emails[0].value
       });
+
+      if (existingUser) {
+        if (existingUser.googleId) {
+          return done(null, existingUser);
+        }
+        const query = {
+          email: profile.emails[0].value
+        };
+        User.findOneAndUpdate(query, { googleId: profile.id }, (err, user) => {
+          done(null, user);
+        });
+      } else {
+        const user = await new User({
+          googleId: profile.id,
+          email: profile.emails[0].value
+        }).save();
+        done(null, user);
+      }
     }
   )
 );
@@ -62,42 +63,42 @@ passport.use(
       profileFields: ['emails'],
       proxy: true
     },
-    (accessToken, refreshToken, profile, done) => {
+    async (accessToken, refreshToken, profile, done) => {
       // console.log('accessToken', accessToken);
       // console.log('refreshToken', refreshToken);
       // console.log('profile', profile);
 
       if (profile.emails) {
-        User.findOne({ email: profile.emails[0].value }).then(existingUser => {
-          if (existingUser) {
-            if (existingUser.facebookId) {
-              done(null, existingUser);
-            } else {
-              const query = {
-                email: profile.emails[0].value
-              };
-              User.findOneAndUpdate(query, {facebookId: profile.id}, (err, user) => {
-                done(null, user);
-              })
-            }
-          } else {
-            new User({ facebookId: profile.id, email: profile.emails[0].value })
-              .save()
-              .then(user => {
-                done(null, user);
-              });
+        const existingUser = User.findOne({ email: profile.emails[0].value });
+
+        if (existingUser) {
+          if (existingUser.facebookId) {
+            return done(null, existingUser);
           }
-        });
-      } else {
-        User.findOne({ facebookId: profile.id }).then(existingUser => {
-          if (existingUser) {
-            done(null, existingUser);
-          } else {
-            new User({ facebookId: profile.id }).save().then(user => {
+          const query = {
+            email: profile.emails[0].value
+          };
+          User.findOneAndUpdate(
+            query,
+            { facebookId: profile.id },
+            (err, user) => {
               done(null, user);
-            });
-          }
-        });
+            }
+          );
+        } else {
+          const user = new User({
+            facebookId: profile.id,
+            email: profile.emails[0].value
+          }).save();
+          done(null, user);
+        }
+      } else {
+        const existingUser = User.findOne({ facebookId: profile.id });
+        if (existingUser) {
+          return done(null, existingUser);
+        }
+        const user = new User({ facebookId: profile.id }).save();
+        done(null, user);
       }
     }
   )
