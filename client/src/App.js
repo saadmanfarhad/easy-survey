@@ -18,6 +18,8 @@ function App() {
         >
           Learn React
         </a>
+        <a href="/auth/google">Sign In With Google</a>
+        <a href="/auth/facebook">Sign In With Facebook</a>
       </header>
     </div>
   );
