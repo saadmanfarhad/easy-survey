@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { useSelector, connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 // class Header extends Component {
 const Header = () => {
@@ -28,26 +29,26 @@ const Header = () => {
           </li>
         );
     }
-  }
+  };
 
   // render() {
-    // console.log(this.props);
-    return (
-      <nav>
-        <div className="row nav-wrapper">
-          <div className="col s12">
-            <a href="/" className="brand-logo">
-              Easy Survey
-            </a>
-            <ul id="nav-mobile" className="right hide-on-med-and-down">
-              {renderContent()}
-            </ul>
-          </div>
+  // console.log(this.props);
+  return (
+    <nav>
+      <div className="row nav-wrapper">
+        <div className="col s12">
+          <Link to={auth ? `/surveys` : `/`} className="brand-logo">
+            Easy Survey
+          </Link>
+          <ul id="nav-mobile" className="right hide-on-med-and-down">
+            {renderContent()}
+          </ul>
         </div>
-      </nav>
-    );
+      </div>
+    </nav>
+  );
   // }
-}
+};
 
 // function mapStateToProps({ auth }) {
 //   return { auth };
