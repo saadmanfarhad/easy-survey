@@ -6,8 +6,7 @@ import Payments from './Payments';
 // class Header extends Component {
 const Header = () => {
   const auth = useSelector(state => state.auth);
-  console.log(auth);
-
+  
   const renderContent = () => {
     switch (auth) {
       case null:
