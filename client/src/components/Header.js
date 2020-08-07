@@ -6,7 +6,7 @@ import Payments from './Payments';
 // class Header extends Component {
 const Header = () => {
   const auth = useSelector(state => state.auth);
-  
+
   const renderContent = () => {
     switch (auth) {
       case null:
@@ -41,7 +41,7 @@ const Header = () => {
   // console.log(this.props);
   return (
     <nav>
-      <div className="row nav-wrapper">
+      <div className="row nav-wrapper teal">
         <div className="col s12">
           <Link to={auth ? `/surveys` : `/`} className="brand-logo">
             Easy Survey
