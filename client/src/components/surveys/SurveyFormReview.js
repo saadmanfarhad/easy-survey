@@ -1,10 +1,11 @@
 import React from 'react';
+import {withRouter} from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import formFields from './formFields';
 import * as actions from '../../actions';
 import { map } from 'lodash';
 
-const SurveyFormReview = ({ onCancel }) => {
+const SurveyFormReview = ({ onCancel, history }) => {
   const { values } = useSelector(state => state.form.surveyForm);
   const dispatch = useDispatch();
 
@@ -29,7 +30,7 @@ const SurveyFormReview = ({ onCancel }) => {
       </button>
       <button
         className="green white-text btn-flat right"
-        onClick={() => dispatch(actions.submitSurvey(values))}
+        onClick={() => dispatch(actions.submitSurvey(values, history))}
       >
         Send Survey
         <i className="material-icons right">email</i>
@@ -38,4 +39,4 @@ const SurveyFormReview = ({ onCancel }) => {
   );
 };
 
-export default SurveyFormReview;
+export default withRouter(SurveyFormReview);
