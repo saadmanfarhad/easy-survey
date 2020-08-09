@@ -4,17 +4,11 @@ import { reduxForm, Field } from 'redux-form';
 import { map, forEach } from 'lodash';
 import SurveyField from './SurveyField';
 import validateEmails from '../../utils/validateEmails';
-
-const FIELDS = [
-  { label: 'Survey Title', name: 'title' },
-  { label: 'Subject Line', name: 'subject' },
-  { label: 'Email Body', name: 'body' },
-  { label: 'Recipient List', name: 'emails' }
-];
+import formFields from './formFields';
 
 const SurveyForm = props => {
   const renderFields = () => {
-    return map(FIELDS, ({ label, name }) => {
+    return map(formFields, ({ label, name }) => {
       return (
         <Field
           key={name}
@@ -49,7 +43,7 @@ function validate(values) {
 
   errors.emails = validateEmails(values.emails || '');
 
-  forEach(FIELDS, ({ name }) => {
+  forEach(formFields, ({ name }) => {
     if (!values[name]) {
       errors[name] = `You must provide a ${name}!`;
     }
@@ -61,5 +55,6 @@ function validate(values) {
 
 export default reduxForm({
   validate,
-  form: 'surveyForm'
+  form: 'surveyForm',
+  destroyOnUnmount: false
 })(SurveyForm);

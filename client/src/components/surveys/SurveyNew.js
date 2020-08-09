@@ -5,9 +5,15 @@ import SurveyFormReview from './SurveyFormReview';
 const SurveyNew = () => {
   const [showFormReview, setShowFormReview] = useState(false);
 
-  const toggleShowFormReview = value => {};
-
-  return <div>{showFormReview ?  <SurveyFormReview /> : <SurveyForm onSurveySubmit={() => setShowFormReview(true)} />}</div>;
+  return (
+    <div>
+      {showFormReview ? (
+        <SurveyFormReview onCancel={() => setShowFormReview(false)} />
+      ) : (
+        <SurveyForm onSurveySubmit={() => setShowFormReview(true)} />
+      )}
+    </div>
+  );
 };
 
 export default SurveyNew;
