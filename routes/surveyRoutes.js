@@ -9,7 +9,13 @@ const Survey = mongoose.model('surveys');
 module.exports = app => {
   app.get('/api/surveys/thanks', (req, res) => {
     res.send('Thanks for your feedback');
-  })
+  });
+
+  app.post('/api/surveys/webhooks', (req, res) => {
+    console.log(req.body);
+    res.send({});
+  });
+
   app.post('/api/surveys', requireLogin, requireCredits, async (req, res) => {
     const { title, subject, recipients, body } = req.body;
     const recipientsObject = recipients.split(',').map(recipient => {
@@ -36,7 +42,7 @@ module.exports = app => {
 
       res.send(user);
     } catch (e) {
-      res.status(422).send(e)
+      res.status(422).send(e);
     }
   });
 };
