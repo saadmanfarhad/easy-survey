@@ -28,7 +28,8 @@
     "passport-google-oauth20": "^2.0.0",
     "path-parser": "^6.1.0",
     "postmark": "^2.5.4",
-    "stripe": "^8.82.0"
+    "stripe": "^8.82.0",
+    "redis": "^2.8.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.4"

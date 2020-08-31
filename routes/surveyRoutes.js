@@ -3,6 +3,7 @@ const { URL } = require('url');
 const mongoose = require('mongoose');
 const requireLogin = require('../middlewares/requireLogin');
 const requireCredits = require('../middlewares/requireCredits');
+const cleanCache = require('../middlewares/cleanCache');
 const Mailer = require('../services/Mailer');
 const surveyTemplate = require('../services/emailTemplates/surveyTemplate');
 
@@ -10,14 +11,18 @@ const Survey = mongoose.model('surveys');
 
 module.exports = app => {
   app.get('/api/surveys', requireLogin, async (req, res) => {
-    const surveys = await Survey.find({ _user: req.user.id }).select({
-      recipients: false
-    });
+    const surveys = await Survey.find({ _user: req.user.id })
+      .select({
+        recipients: false
+      })
+      .cache({
+        key: req.user.id
+      });
 
     res.send(surveys);
   });
 
-  app.delete('/api/surveys', requireLogin, async (req, res) => {
+  app.delete('/api/surveys', requireLogin, cleanCache, async (req, res) => {
     const { id } = req.body;
     const deleted = await Survey.findByIdAndDelete(id);
     const surveys = await Survey.find({ _user: req.user.id }).select({
@@ -59,33 +64,39 @@ module.exports = app => {
     res.send({});
   });
 
-  app.post('/api/surveys', requireLogin, requireCredits, async (req, res) => {
-    const { title, subject, recipients, body } = req.body;
-    const recipientsObject = recipients.split(',').map(recipient => {
-      return {
-        email: recipient.trim()
-      };
-    });
+  app.post(
+    '/api/surveys',
+    requireLogin,
+    requireCredits,
+    cleanCache,
+    async (req, res) => {
+      const { title, subject, recipients, body } = req.body;
+      const recipientsObject = recipients.split(',').map(recipient => {
+        return {
+          email: recipient.trim()
+        };
+      });
 
-    const survey = new Survey({
-      title,
-      subject,
-      body,
-      recipients: recipientsObject,
-      _user: req.user.id,
-      dateSent: Date.now()
-    });
+      const survey = new Survey({
+        title,
+        subject,
+        body,
+        recipients: recipientsObject,
+        _user: req.user.id,
+        dateSent: Date.now()
+      });
 
-    try {
-      const mailer = new Mailer(survey, surveyTemplate(survey));
-      await mailer.send();
-      await survey.save();
-      req.user.credits -= 1;
-      const user = await req.user.save();
+      try {
+        const mailer = new Mailer(survey, surveyTemplate(survey));
+        await mailer.send();
+        await survey.save();
+        req.user.credits -= 1;
+        const user = await req.user.save();
 
-      res.send(user);
-    } catch (e) {
-      res.status(422).send(e);
+        res.send(user);
+      } catch (e) {
+        res.status(422).send(e);
+      }
     }
-  });
+  );
 };
