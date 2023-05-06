@@ -10,5 +10,6 @@ module.exports = {
   stripeSecretKey: process.env.STRIPE_SECRET_KEY,
   postmarkKey: process.env.POSTMARK_KEY,
   redirectDomain: process.env.REDIRECT_DOMAIN,
-  redisUrl: process.env.REDIS_URL
+  redisUrl: process.env.REDIS_URL,
+  redisPassword: process.env.REDIS_PASSWORD,
 };
