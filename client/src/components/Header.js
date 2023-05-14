@@ -5,7 +5,7 @@ import Payments from './Payments';
 
 // class Header extends Component {
 const Header = () => {
-  const auth = useSelector(state => state.auth);
+  const auth = useSelector((state) => state.auth);
 
   const renderContent = () => {
     switch (auth) {
@@ -15,10 +15,10 @@ const Header = () => {
         return (
           <>
             <li>
-              <a href="/auth/google">Sign In with Google</a>
+              <a href="/api/auth/google">Sign In with Google</a>
             </li>
             <li>
-              <a href="/auth/facebook">Sign In with Facebook</a>
+              <a href="/api/auth/facebook">Sign In with Facebook</a>
             </li>
           </>
         );

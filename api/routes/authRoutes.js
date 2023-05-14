@@ -1,17 +1,16 @@
 const passport = require('passport');
-const cleanCache = require('../middlewares/cleanCache');
 
 module.exports = (app) => {
   //GOOGLE LOGIN
   app.get(
-    '/auth/google',
+    '/api/auth/google',
     passport.authenticate('google', {
       scope: ['profile', 'email'],
     })
   );
 
   app.get(
-    '/auth/google/callback',
+    '/api/auth/google/callback',
     passport.authenticate('google'),
     (req, res) => {
       res.redirect('/surveys');
@@ -20,14 +19,14 @@ module.exports = (app) => {
 
   //FACEBOOK LOGIN
   app.get(
-    '/auth/facebook',
+    '/api/auth/facebook',
     passport.authenticate('facebook', {
       scope: ['email'],
     })
   );
 
   app.get(
-    '/auth/facebook/callback',
+    '/api/auth/facebook/callback',
     passport.authenticate('facebook'),
     (req, res) => {
       res.redirect('/surveys');
